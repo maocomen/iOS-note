@@ -176,7 +176,7 @@ for (kind, numbers) in interestingNumbers {
 print(largest)
 ```
 
-用 while 可以循环执行一个代码块，直到判断条件不成立。判断条件我们可以卸载结尾处，这样子的话可以保证这个代码块至少执行一次。
+用 while 可以循环执行一个代码块，直到判断条件不成立。判断条件我们可以写在结尾处，这样子的话可以保证这个代码块至少执行一次。
 
 ```swift
 var n = 2
