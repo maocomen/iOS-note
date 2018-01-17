@@ -10,6 +10,8 @@ print("Hello, world!")
 
 如果您之前用 C 语言或者 Objective-C 语言编写过代码的话，对 Swift 的这种语法会感到更亲切。在 Swift 中，上面这一行代码就是一个完整的程序，您不需要为输入／输出字符串等处理导入单独的库。在 Swift 中，写在全局环境中的代码作为程序的主入口（main.swift文件中的代码），所以不需要 main() 函数。我们同样不需要在每一句代码的结尾处写分号。
 
+有关于 Objective-C 和 Swift 的 main 函数的介绍可以移步喵神的解释[@UIAPPLICATIONMAIN](http://swifter.tips/uiapplicationmain/)。
+
 这篇文章会通过展示多种编程任务的实现，来告诉你，如何用 Swift 编写代码。
 
 ## 简单值
@@ -40,7 +42,7 @@ let width = 94
 let widthLabel = label + String(width)
 ```
 
-如果我们想在字符串中包含其他值，可以用另一种更简单一点的方法，将要包含的值卸载圆括号中，并在圆括号之前写个反斜杠。
+如果我们想在字符串中包含其他值，可以用另一种更简单一点的方法，将要包含的值写在圆括号中，并在圆括号之前写个反斜杠。
 
 ```swift
 let apples = 3
@@ -811,3 +813,4 @@ anyCommonElements([1, 2, 3], [3])
 # 引用
 
 [官网地址](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/GuidedTour.html)
+
