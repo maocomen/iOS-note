@@ -2,7 +2,7 @@
 
 #基础
 
-Swift 是一种用于 iOS，macOS，watchOS 和 tvOS 应用程序开发的一门新的编程语言。尽管如此，从我们开发 C 和 Objective-C 的经验中，我们依然可以看到 Swift 中很多熟悉的地方。
+Swift 是一种用于 iOS，macOS，watchOS 和 tvOS 应用程序开发的一门新的编程语言。尽管如此，如果我们有开发过 C 和 Objective-C 的经历，我们会在 Swift 中看到很多熟悉的东西。
 
 对于我们在 C 或 Objective-C 中已经习惯了的类型，Swift 都提供了对应的版本，包括用 Int 代表整型，Double 和 Float 代表浮点数，Bool 代表布尔值，String 代表文本数据。Swift 还提供了三种主要集合类型的强大版本，Array ，Set 和 Dictionary，具体可以看 [Collection Types](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/CollectionTypes.html#//apple_ref/doc/uid/TP40014097-CH8-ID105) 。
 
@@ -41,7 +41,7 @@ var x = 0.0, y = 0.0, z = 0.0
 
 ### 类型注释
 
-我们在声明常量或者变量的时候，可以提供一个类型注释，以清楚常量和变量可以存储的值的类型。要写一个类型注释，我们需要在常量或变量名后面加一个冒号，然后跟一个空格，然后写需要使用的类型名称。
+我们在声明常量或者变量的时候，可以提供一个类型注释，以清楚常量和变量可以存储的值的类型。要写一个类型注释，我们需要在常量或变量名后面加一个冒号，然后跟一个空格（当然不写空格编译器也不会报错，对运行结果也不会有影响，但是为了规范美观还是要写一下），然后写需要使用的类型名称。
 
 下面这个例子为变量 welcomeMessage 提供了一个类型注释，来指明变量只能存储 String 类型的值。
 
@@ -470,7 +470,7 @@ let convertedNumber = Int(possibleNumber)
 
 ### nil
 
-我们可以通过赋予一个特殊的值 nil 来设置一个无价值状态的可选变量。
+我们可以通过赋予一个特殊的值 nil 来设置一个无值状态的可选变量。
 
 ```swift
 var serverResponseCode: Int? = 404
@@ -479,7 +479,7 @@ serverResponseCode = nil
 // serverResponseCode now contains no value
 ```
 
-如果我们在不提供默认值的情况下定于可选变量，那么该变量会自动置为 nil 。
+如果我们在不提供默认值的情况下定义可选变量，那么该变量会自动置为 nil 。
 
 ```swift
 var surveyAnswer: String?
@@ -488,7 +488,7 @@ var surveyAnswer: String?
 
 ### if 语句和强制展开
 
-我们可以在 if 语句中将可选值与 nil 进行比较来判断可选值是否包含一个值。我们可以通过 "equal to"(==) 或 "not equal to"(!=) 来执行比较。
+我们可以在 if 语句中将可选值与 nil 进行比较来判断可选值是否包含一个值。我们可以通过 "equal to" (==) 或 "not equal to" (!=) 来执行比较。
 
 如果可选值有值，会被认为与 nil 不相等。
 
