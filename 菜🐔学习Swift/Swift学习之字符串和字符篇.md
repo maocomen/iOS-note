@@ -243,11 +243,11 @@ let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)"
 
 multiplier 同样是上面字符串后面大表达式中的一部分。这个表达式会计算 `Double(multiplier) * 2.5`  的值并在字符串中插入计算后的结果 (7.5) 。在这个例子中，当表达式需要被包含在字符串字面值中时，需要写作 `\(Double(multiplier) * 2.5) `  。
 
-##Unicode
+## Unicode
 
 Unicode 是一种用于在不同的书写系统中编码，标示和处理文本的国际统一标准。它使得我们能几乎能从任何语言中以标准化的形式表示任何字符，并从外部源（文本文件或 web 页面）读取和写入这些字符。Swift 中的 String 和 Charactor 类型完全符合 Unicode，如本节所述。
 
-###Unicode 
+### Unicode 
 
 实际上，Swift 中的原生 String 类型是以 Unicode 标量值构建的。一个 Unicode 标量是具有唯一 21-bit 数字的字符串或修饰符，例如 U+0061代表拉丁小写字母 A（LATIN SMALL LETTER A ("a")），U+1F代表小鸡（FRONT-FACING BABY CHICK ("🐥")）。
 
