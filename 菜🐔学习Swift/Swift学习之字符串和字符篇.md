@@ -257,7 +257,169 @@ Unicode标量是指在U+0000到U+D7FF或U+E000到U+10FFFF的范围内的任何Un
 
 ### 拓展的字形集群
 
-Swift 中的每个 Character 实例都代表一个拓展的字形集群。
+Swift 中的每个 Character 实例都代表一个拓展的字形集群。一个拓展的字形集群是一个或多个 Unicode 标量的序列（当组合时），来产生一个单一的人类可识别的字符。
+
+举个例子，字符 é 可以表示为单个 Unicode 标量 é (LATIN SMALL LETTER E WITH ACUTE 或 U+00E9)。单是，该字符也可以表示为一对标量（标准字符 e (LATIN SMALL LETTER E 或 U+0065) ），后跟 COMBINING ACUTE ACCENT 标量 (U+0301) 。该 COMBINING ACUTE ACCENT 标量被图形化的应用到它之前的标量，当它由一个能处理 Unicode 的文本渲染系统渲染时，会将 e 转换成 é 。
+
+在这两种情况下，字符 é 都表示为单个的 Swift 字符值，代表一个拓展的字符集群。在第一种情况里，集群只包含一个标量；第二种情况下，它是由两个标量组成的集群：
+
+```swift
+let eAcute: Character = "\u{E9}"                         // é
+let combinedEAcute: Character = "\u{65}\u{301}"          // e followed by ́
+// eAcute is é, combinedEAcute is é
+```
+
+拓展的字符集群是一种灵活的方式，可以将许多复杂的脚本字符表示为单个的 Character 值。例如，韩语字母表中的韩语音节可以表示成一个预合成的或分解的序列。这两种表述都可以作为 Swift 的单个 Character 值：
+
+```swift
+let precomposed: Character = "\u{D55C}"                  // 한
+let decomposed: Character = "\u{1112}\u{1161}\u{11AB}"   // ᄒ, ᅡ, ᆫ
+// precomposed is 한, decomposed is 한
+```
+
+拓展的字符集群可以使用标量来封闭标记（例如 COMBINING ENCLOSING CIRCLE，或者 U+20DD），用来将其他 Unicode 标量作为单个 Character 值的一部分封闭起来：
+
+```swift
+let enclosedEAcute: Character = "\u{E9}\u{20DD}"
+// enclosedEAcute is é⃝
+```
+
+区域指标符号的 Unicode 标量可以成对组合成单个 Character 值，比如 REGIONAL INDICATOR SYMBOL LETTER U （U
+
++1F1FA） 和 REGIONAL INDICATOR SYMBOL LETTER S（U+1F1F8）的组合：
+
+```swift
+let regionalIndicatorForUS: Character = "\u{1F1FA}\u{1F1F8}"
+// regionalIndicatorForUS is 🇺🇸
+```
+
+
+
+## 计数字符
+
+要检索字符串中 Character 值的数量，可以使用字符串的 count 属性。
+
+```swift
+let unusualMenagerie = "Koala 🐨, Snail 🐌, Penguin 🐧, Dromedary 🐪"
+print("unusualMenagerie has \(unusualMenagerie.count) characters")
+// Prints "unusualMenagerie has 40 characters"
+```
+
+要注意，Swift 中对 Character 使用了拓展的字符集群，这意味着字符串的链接和修改可能不会总是影响字符串的字符数量。
+
+例如，如果我们用四个字符的单词 cafe 来初始化一个新的字符串，然后添加一个 COMBINING ACUTE ACCENT（U+0301）到它的结尾，那么新的字符串还是只有四个字符，第四个字符变成了 é 而不是 e :
+
+```swift
+var word = "cafe"
+print("the number of characters in \(word) is \(word.count)")
+// Prints "the number of characters in cafe is 4"
+ 
+word += "\u{301}"    // COMBINING ACUTE ACCENT, U+0301
+ 
+print("the number of characters in \(word) is \(word.count)")
+// Prints "the number of characters in café is 4"
+```
+
+要注意，拓展的字符集群可以由多个 Unicode 标量组成，这意味着不同的字符—相同字符的不同表示—可能需要不同的内存来存储。因此，Swift 中的字符不会在字符串的表示中占用相同的内存。结果就是，字符串中的字符数量不得不通过遍历字符串中的拓展的字符集群来计算。如果我们使用的是特别长的字符串值，要注意的是，属性 count 必须要遍历整个字符串中的 Unicode 标量，以确定该字符串的字符数量。
+
+count 属性返回的字符数量并不会总是和包含相同字符的 NSString 的 length 属性相同。NSString 的长度是基于字符串中 UTF-16 表示的 16-bit 代码单元的数量，而不是字符串中拓展字符集群的数量。
+
+
+
+## 访问和修改字符串
+
+我们可以通过 String 的方法或者属性或者使用下标语法来访问和修改它。
+
+### 字符串索引
+
+每个 String 值都有一个关联的索引类型，String.Index，它对应于字符串中每个 Character 的位置。
+
+正如上面提到的，不同的字符需要存储到不同的内存，为了确定 Character 的特定位置，我们必须从 String 的开始或者结束的地方来迭代每个 Unicode 标量。由于这个原因，Swift 字符串不能被整数值索引。
+
+使用 startIndex 来访问 String 中第一个 Character 的位置。endIndex 是 String 中最后一个 Character 的后一个位置。因此，endIndex 对于字符串的下标来讲不是一个有效的参数。如果一个字符串是空的，那么它的 startIndex 和 endIndex 是相等的。
+
+我们可以用 String 提供的 index(before:) 和 index(after:) 方法来得到指定下标之前或之后的那个索引。如果我们要访问一个距离制定下标笔记远的索引，我们可以使用 index(_:offsetBy:) 方法而不是调用好多次 index(before:) 或 index(after:) 。
+
+我们可以使用下标语法来访问 String 中特定索引的字符。
+
+```swift
+let greeting = "Guten Tag!"
+greeting[greeting.startIndex]
+// G
+greeting[greeting.index(before: greeting.endIndex)]
+// !
+greeting[greeting.index(after: greeting.startIndex)]
+// u
+let index = greeting.index(greeting.startIndex, offsetBy: 7)
+greeting[index]
+// a
+```
+
+试图获取字符串范围之外的索引或者是用字符串索引之外的索引来获取字符都会引起运行错误。
+
+```swift
+greeting[greeting.endIndex] // Error
+greeting.index(after: greeting.endIndex) // Error
+```
+
+我们可以利用 indices 属性来获取字符串中所有单个字符的索引。
+
+```swift
+for index in greeting.indices {
+    print("\(greeting[index]) ", terminator: "")
+}
+// Prints "G u t e n   T a g ! "
+```
+
+
+
+### 插入和删除
+
+如果我们想在字符串的指定索引位置插入一个字符，我们可以使用 insert(_:at:) 方法，如果我们想在指定索引位置插入一个别的字符串，我们可以使用 insert(contentsOf:at:) 方法。
+
+```swift
+var welcome = "hello"
+welcome.insert("!", at: welcome.endIndex)
+// welcome now equals "hello!"
+ 
+welcome.insert(contentsOf: " there", at: welcome.index(before: welcome.endIndex))
+// welcome now equals "hello there!"
+```
+
+如果我们想删除字符串中特定索引处的字符，我们可以调用 remove(at:) 方法，如果想删除特定范围内的子字符串，我们可以使用 removeSubrange(_:) 方法。
+
+```swift
+welcome.remove(at: welcome.index(before: welcome.endIndex))
+// welcome now equals "hello there"
+ 
+let range = welcome.index(welcome.endIndex, offsetBy: -6)..<welcome.endIndex
+welcome.removeSubrange(range)
+// welcome now equals "hello"
+```
+
+##子串
+
+当我们从一个字符串中得到一个子串的时候——例如，使用下标活着类似 prefix(_:) 的方法，我们会得到一个 [Substring](https://developer.apple.com/documentation/swift/substring) 类型的实例，而不是字符串。在 Swift 中，子串包含许多和字符串相同的方法，这意味着我们可以像使用字符串一样来使用它。然而，不像字符串一样，我们在操作字符串的时候，只会在很短的时间内使用子串。当我们准备将结果存储较长的时间的时候，我们可以将子串转换为 String 实例。例如：
+
+```swift
+let greeting = "Hello, world!"
+let index = greeting.index(of: ",") ?? greeting.endIndex
+let beginning = greeting[..<index]
+// beginning is "Hello"
+ 
+// Convert the result to a String for long-term storage.
+let newString = String(beginning)
+```
+
+像字符串一样，每个子串都有一个内存区域，其中组成子串的字符被存储在其中。字符串和子串的不同就在于，作为一个性能优化的点，子串可以重用部分用来存储原始字符串的内存或者是重用部分用来存储其他子串的内存。（字符串有类似的油画，但是如果两个字符串共享内存的话，那么它们是相等的。）这种性能优化意味着，在修改字符串或者子串之前，不必支付拷贝内存的性能成本。正如上面所提到的，子串不适合长期存储——因为它们会重用原始字符串的存储空间，只要子串被使用，都必须要将它所对应的原始字符串保存到内存中。
+
+在上面的例子中，greeting 是一个字符串，这意味着它有一块内存区域来存储组成该字符串的所有字符。因为 beginning 是 greeting 的子串，它会重用 greeting 的内存。与此形成鲜明对比的是，newString 是一个字符串——它是根据一个子串创建出来的，它有自己的内存区域。下图很明显的显示了这些关系：
+
+![](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Art/stringSubstring_2x.png)
+
+## 字符串的比较
+
+Swift 提供了三种比较文本值的方法：字符串和字符相等，前缀相等和后缀相等。
 
 # 引用
 
