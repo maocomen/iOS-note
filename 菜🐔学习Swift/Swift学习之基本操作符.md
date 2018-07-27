@@ -78,7 +78,7 @@ Swift 对所有的数字类型都支持四种标准的算术运算符：
 
 以下是取余运算符的工作原理。要计算 9 % 4 ，我们首先要知道 9 里面有多少个 4 :
 
-![image: ../Art/remainderInteger_2x.png](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Art/remainderInteger_2x.png)
+![image: ../Art/remainderInteger_2x.png](https://docs.swift.org/swift-book/_images/remainderInteger_2x.png)
 
 我们可以在 9 中找到两个 4 ，剩下的是 1 (橙色部分) 。
 

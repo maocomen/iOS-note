@@ -24,7 +24,7 @@ let someString = "Some string literal value"
 
  如果需要一个跨多行的字符串，请使用多行字符串字面值——一个被三个双引号包围的字符串序列：
 
-```swift
+```python
 let quotation = """
 The White Rabbit put on his spectacles.  "Where shall I begin,
 please your Majesty?" he asked.
@@ -45,7 +45,7 @@ These are the same.
 
 当我们的源代码在多行字符串字面值中包含换行符时，该换行符也会显示在字符串的值中。如果我们需要使用换行符来使得我们的代码更简单易读，却不希望换行符成为字符串字面值的一部分，我们可以在每行的末尾插入反斜杠 (\\)。
 
-```swift
+```python
 let softWrappedQuotation = """
 The White Rabbit put on his spectacles.  "Where shall I begin, \
 please your Majesty?" he asked.
@@ -57,7 +57,7 @@ till you come to the end; then stop."
 
 要使用换行符开头或结尾的多行字符串字面值，我们可以在第一行或者最后一行输入一个空白行。例如：
 
-```swift
+```python
 let lineBreaks = """
  
 This string starts with a line break.
@@ -68,7 +68,7 @@ It also ends with a line break.
 
 多行字符串可以用缩进来匹配周围的代码。在结束引号之前的空白 ("") 会告诉 Swift，应该在其他行也忽略哪些空白。然而，如果我们在每一行的开头都写了空格 (除了结束引号之前)，那么空格会被包括在字符串内容中。
 
-![图片1](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Art/multilineStringWhitespace_2x.png)
+![图片1](https://docs.swift.org/swift-book/_images/multilineStringWhitespace_2x.png)
 
 在上面的例子中，整个多行字符串字面值是缩进的，第一行和最后一行都不会以空格开头。中间那行的缩进比结束引号之前的缩进要多，所以它会以额外的 4 格缩进开头。
 
@@ -259,7 +259,7 @@ Unicode标量是指在U+0000到U+D7FF或U+E000到U+10FFFF的范围内的任何Un
 
 Swift 中的每个 Character 实例都代表一个拓展的字形集群。一个拓展的字形集群是一个或多个 Unicode 标量的序列（当组合时），来产生一个单一的人类可识别的字符。
 
-举个例子，字符 é 可以表示为单个 Unicode 标量 é (LATIN SMALL LETTER E WITH ACUTE 或 U+00E9)。单是，该字符也可以表示为一对标量（标准字符 e (LATIN SMALL LETTER E 或 U+0065) ），后跟 COMBINING ACUTE ACCENT 标量 (U+0301) 。该 COMBINING ACUTE ACCENT 标量被图形化的应用到它之前的标量，当它由一个能处理 Unicode 的文本渲染系统渲染时，会将 e 转换成 é 。
+举个例子，字符 é 可以表示为单个 Unicode 标量 é (LATIN SMALL LETTER E WITH ACUTE 或 U+00E9)。但是，该字符也可以表示为一对标量（标准字符 e (LATIN SMALL LETTER E 或 U+0065) ），后跟 COMBINING ACUTE ACCENT 标量 (U+0301) 。该 COMBINING ACUTE ACCENT 标量被图形化的应用到它之前的标量，当它由一个能处理 Unicode 的文本渲染系统渲染时，会将 e 转换成 é 。
 
 在这两种情况下，字符 é 都表示为单个的 Swift 字符值，代表一个拓展的字符集群。在第一种情况里，集群只包含一个标量；第二种情况下，它是由两个标量组成的集群：
 
