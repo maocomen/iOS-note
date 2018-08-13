@@ -307,7 +307,7 @@ print("unusualMenagerie has \(unusualMenagerie.count) characters")
 
 要注意，Swift 中对 Character 使用了拓展的字符集群，这意味着字符串的链接和修改可能不会总是影响字符串的字符数量。
 
-例如，如果我们用四个字符的单词 cafe 来初始化一个新的字符串，然后添加一个 COMBINING ACUTE ACCENT（U+0301）到它的结尾，那么新的字符串还是只有四个字符，第四个字符变成了 é 而不是 e :
+例如，如果我们用四个字符的单词 cafe 来初始化一个新的字符串，然后添加一个 COMBINING ACUTE ACCENT（U+0301）到它的结尾，那么新的字符串还是只有四个字符，第四个字符变成了 é 而不是 e :
 
 ```swift
 var word = "cafe"
@@ -397,7 +397,7 @@ welcome.removeSubrange(range)
 // welcome now equals "hello"
 ```
 
-##子串
+## 子串
 
 当我们从一个字符串中得到一个子串的时候——例如，使用下标活着类似 prefix(_:) 的方法，我们会得到一个 [Substring](https://developer.apple.com/documentation/swift/substring) 类型的实例，而不是字符串。在 Swift 中，子串包含许多和字符串相同的方法，这意味着我们可以像使用字符串一样来使用它。然而，不像字符串一样，我们在操作字符串的时候，只会在很短的时间内使用子串。当我们准备将结果存储较长的时间的时候，我们可以将子串转换为 String 实例。例如：
 
