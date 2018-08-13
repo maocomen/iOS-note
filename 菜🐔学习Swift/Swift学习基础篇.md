@@ -1,6 +1,6 @@
 [TOC]
 
-#基础
+# 基础
 
 Swift 是一种用于 iOS，macOS，watchOS 和 tvOS 应用程序开发的一门新的编程语言。尽管如此，如果我们有开发过 C 和 Objective-C 的经历，我们会在 Swift 中看到很多熟悉的东西。
 
