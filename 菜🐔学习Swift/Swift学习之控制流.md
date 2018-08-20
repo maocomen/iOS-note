@@ -124,4 +124,103 @@ while condition {
 
 游戏规则如下:
 
-* 
+* 棋盘拥有 25 个格子，目标就是到达或者超过第 25 号格子。
+* 玩家的起始位置是 “第 0 号格子”，它位于棋盘的左下角。
+* 每一回合，我们都需要投掷一个骰子（六个面，6 个面分别写着 1-6 的数字，最后骰子停下来时，朝上那面所展示的数字就是我们要移动的格子数），然后按照上面虚线所指示的路径移动指定数量个格子。
+* 如果我们停留在了梯子的下面，我们就可以顺着梯子爬上去。
+* 如果我们停留在了蛇的头部，那么我们就必须沿着蛇滑下来。
+
+在下面的例子中，游戏棋盘用一个 Int 数组表示。数组的大小基于一个叫做 finalSquare 的常量，例子中用这个常量来初始化数组并用其作为检查是否胜利的条件。因为玩家在棋盘上的起始点是 “第 0 号格子”，所以初始化后的数组需要有 26 个值为 0 的 Int 值，而不是 25 个。
+
+```swift
+let finalSquare = 25
+var board = [Int](repeating: 0, count: finalSquare + 1)
+```
+
+有些格子需要被当作蛇和梯子，所以要给他们设置一些特定值。作为梯子底座的格子需要设置成正数来方便我们在棋盘向上移动，作为蛇头的格子需要设置成负数方便我们在棋盘上向下移动。
+
+```swift
+board[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02
+board[14] = -10; board[19] = -11; board[22] = -02; board[24] = -08
+```
+
+3 号格子需要作为梯子的底部，如果移动到该处，它会把我们移动到 11 号方格。为了达到这个目的，我们将 board[03] 设置为了 +08，代表它等于一个整数值 8（3 和 11 之间的差值）。为了对齐值和语句（看起来更好看一些），这里使用了一元加号运算符 (+i) 和一元减号运算符 (-i) ，而且小于 10 的数字用了 0 来填充成两位数。（严格的说，这两种做法都不是必须的，但是他们会使我们的代码看起来更整洁优雅。）
+
+```swift
+var square = 0
+var diceRoll = 0
+while square < finalSquare {
+    // roll the dice
+    diceRoll += 1
+    if diceRoll == 7 { diceRoll = 1 }
+    // move by the rolled amount
+    square += diceRoll
+    if square < board.count {
+        // if we're still on the board, move up or down for a snake or a ladder
+        square += board[square]
+    }
+}
+print("Game over!")
+```
+
+上面的例子使用了一种很简单的额方法来模拟骰子的投掷。它没有用到随机数，而是让 diceRoll 从 0 开始。每次执行 while 循环中的代码，diceRoll 都会加 1，然后判断它有没有变的太大。每当这个变量的值返回为 7 时，就会认为 diceRoll 变得太大了，从而将它重置为 1。diceRoll 的值会形成一个有序的序列，它的值将始终是 1，2，3，4，5，6。。。
+
+骰子投掷完之后，玩家会移动 diceRoll 个格子。玩家移动完之后很可能已经超出了第 25 号格子，这种情况下游戏其实已经结束了。为了应对这种情况，代码里做了 square 是否小于数组 board 的 count 属性的检查。如果 square 小于 board.count ，存储在 board[square] 中的值将会被添加到当前的 square 值上，来表示玩家在梯子或者蛇上的上下移动。
+
+> 如果没有执行这个检查的话，board[square] 这行代码很可能会接收到一个超出了 board 数组范围的额值，这会引起一个运行时错误。
+
+当前 while 循环执行结束，然后会判断循环条件，看是否需要执行下一次循环。如果玩家已经移动到或者超过了第  25 号格子，循环条件会被评估为 false，游戏结束。
+
+在这种情况下，使用 while 循环是比较好的一种方案。因为在 while 循环开始时，我们并不能确定游戏的长度（这个循环需要执行几次）。相反的是，我们很清楚地知道循环执行需要的条件，循环将一直执行，直到满足特定的条件为止。
+
+### Repeat-While
+
+while 循环的另一种形式，就是 repeat-while 循环了，在判断循环条件之前就会执行一次循环代码块。然后会继续重复循环，直到判断条件为 false 为止。
+
+> Swift 中的 repeat-while 循环类似于其他语言中的 do-while 循环。
+
+这是 repeat-while 循环的通用形式：
+
+```swift
+repeat {
+    statements
+} while condition
+```
+
+还是以 *Snakes and Ladders* 为例，这次用 repeat-while 循环来代替 while 循环。finalSquare，board，square 和 diceRoll 初始化的方式与 while 中的完全相同。
+
+```swift
+let finalSquare = 25
+var board = [Int](repeating: 0, count: finalSquare + 1)
+board[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02
+board[14] = -10; board[19] = -11; board[22] = -02; board[24] = -08
+var square = 0
+var diceRoll = 0
+```
+
+在这个版本的游戏中，循环的第一个动作（这个动作指的就是循环代码块，repeat-while 会先执行一次循环代码块，再进行条件判断，再执行循环代码块，再进行条件判断。。。循环往复）是检查是否是梯子和蛇。棋盘上没有梯子可以直接将玩家移动到第 25 号格子，所以不可能通过踩中梯子向上移动而直接赢得游戏。因此，以检查梯子和蛇作为循环的第一个动作是安全的。
+
+在游戏开始时，玩家处于 “第 0 号格子”。board[0] 始终是 0 所以不会有什么影响。
+
+```swift
+repeat {
+    // move up or down for a snake or ladder
+    square += board[square]
+    // roll the dice
+    diceRoll += 1
+    if diceRoll == 7 { diceRoll = 1 }
+    // move by the rolled amount
+    square += diceRoll
+} while square < finalSquare
+print("Game over!")
+```
+
+在检查完是否是梯子和蛇之后，就到了掷骰子环节，掷完骰子之后，玩家会向前移动 diceRoll 个格子，然后当前循环结束。
+
+循环条件（while square < finalSquare）和之前的一样，但是这次直到第一次循环结束时才会对它进行判断。与前面 while 循环的例子相比，repeat-while 循环的结构更适合这个游戏。在上面 repeat-while 循环的例子中，square += board[square] 总是会在 while 循环的循环条件判断为 true （即 square 仍在棋盘上）之后立即执行。这个行为就移除掉了之前 while 循环版本的游戏中对数组边界检查的需要。
+
+## 条件语句
+
+很多时候根据特定的条件执行不同的代码是很有用的。我们可能需要在发生错误的时候执行额外的代码，又或者在值变得太高或者太低的时候展示一条消息提示。为了达成这个目的，我们需要将我们的代码的一部分设置为条件（即在我们的代码中增加一些代码来作为条件判断语句）。
+
+Swift 提供了两种方法来为代码添加条件分支：也就是 if 条件语句和 switch 条件语句。
