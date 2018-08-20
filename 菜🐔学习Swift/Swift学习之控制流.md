@@ -223,4 +223,62 @@ print("Game over!")
 
 很多时候根据特定的条件执行不同的代码是很有用的。我们可能需要在发生错误的时候执行额外的代码，又或者在值变得太高或者太低的时候展示一条消息提示。为了达成这个目的，我们需要将我们的代码的一部分设置为条件（即在我们的代码中增加一些代码来作为条件判断语句）。
 
-Swift 提供了两种方法来为代码添加条件分支：也就是 if 条件语句和 switch 条件语句。
+Swift 提供了两种方法来为代码添加条件分支：也就是 if 条件语句和 switch 条件语句。通常，if 条件语句更适合只有少量结果的简单条件。而 switch 更适合具有多种排列可能的更复杂的条件，并且 switch 在模式匹配情况下更加有用，它可以帮助我们选择适当的代码分支来执行。？？？？？
+
+### If
+
+在最简单的形式中，if 语句只有一个判断条件。它只会在条件判断为 true 的情况下才会执行相应的代码块。
+
+```swift
+var temperatureInFahrenheit = 30
+if temperatureInFahrenheit <= 32 {
+    print("It's very cold. Consider wearing a scarf.")
+}
+// Prints "It's very cold. Consider wearing a scarf."
+```
+
+在上面的例子中，只对温度是否小于等于 32 华氏摄氏度（水的冰点）做了判断。如果判断为 true ，才会打印一条消息。否则，不会打印任何消息，并且会继续执行 if 语句大括号之后的代码。（这里无论判断为 true 还是 false，都会继续执行大括号之后的代码）
+
+if 语句可以为 if 条件为 false 的情况提供另外一组语句，也就是 else 语句。这些语句由 else 关键字表示。
+
+```swift
+temperatureInFahrenheit = 40
+if temperatureInFahrenheit <= 32 {
+    print("It's very cold. Consider wearing a scarf.")
+} else {
+    print("It's not that cold. Wear a t-shirt.")
+}
+// Prints "It's not that cold. Wear a t-shirt."
+```
+
+上面的例子中，始终会执行两个分支中的其中一个。因为温度已经提高到了 40 华氏摄氏度，没那么冷了，已经不需要再戴围巾保暖了，所以 else 分支就被激活了。
+
+我们可以将多个 if 语句连接起来，用来添加多个子句。
+
+```swift
+temperatureInFahrenheit = 90
+if temperatureInFahrenheit <= 32 {
+    print("It's very cold. Consider wearing a scarf.")
+} else if temperatureInFahrenheit >= 86 {
+    print("It's really warm. Don't forget to wear sunscreen.")
+} else {
+    print("It's not that cold. Wear a t-shirt.")
+}
+// Prints "It's really warm. Don't forget to wear sunscreen."
+```
+
+在这里，增加了一个 if 语句来处理特别暖的气温。最好一个 else 子句仍然存在，它用来响应那些不是太冷也不是太温暖的气温。最后一个 else 子句是可选的，如果我们不需要完成其条件集，可以将其忽略。
+
+```swift
+temperatureInFahrenheit = 72
+if temperatureInFahrenheit <= 32 {
+    print("It's very cold. Consider wearing a scarf.")
+} else if temperatureInFahrenheit >= 86 {
+    print("It's really warm. Don't forget to wear sunscreen.")
+}
+```
+
+由于温度不是太冷也不是太热，所以不会触发 if 和 else if 语句，不会打印任何信息。
+
+### Switch
+
