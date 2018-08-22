@@ -282,3 +282,42 @@ if temperatureInFahrenheit <= 32 {
 
 ### Switch
 
+Switch 会尝试将一个值与若干个模式进行匹配。它只会执行第一个与之匹配成功的模式下的代码块。如果代码中需要处理在多种潜在状态下的不同行为，最好用 switch 语句代替 if 语句。
+
+Switch 最简单的形式就是把某个值与一个或若干个相同类型的值进行比较:
+
+```swift
+switch some value to consider {
+case value 1:
+    respond to value 1
+case value 2,
+     value 3:
+    respond to value 2 or 3
+default:
+    otherwise, do something else
+}
+```
+
+每个 switch 语句都有多种可能匹配到的模式 ( cases )，每个模式都以 case 关键字作为开头。除了与特定的值进行比较之外，Swift 还为每种情况提供了几种方法来处理更复杂的匹配模式。这些会在本章后面进行介绍。
+
+与上文中 if 语句单元中介绍的类似，每个 case 都是一个代码执行的单独分支。switch 语句会决定最后到底使用哪个分支。这个过程被称为根据给定的值进行分支切换。
+
+每个 switch 语句的声明都必须详尽无疑。也就是说，每个可能的值都必须与 switch 的一种模式相匹配。如果不方便为每个可能的值都匹配一种模式，我们可以用默认模式来处理那些没有显式声明的任意值。默认模式由 default 关键字修饰，而且一般默认模式都写在 switch 语句的最后位置。
+
+下面的例子用 switch 语句来匹配一个名为 someCharacter 的小写字符:
+
+```swift
+let someCharacter: Character = "z"
+switch someCharacter {
+case "a":
+    print("The first letter of the alphabet")
+case "z":
+    print("The last letter of the alphabet")
+default:
+    print("Some other character")
+}
+// Prints "The last letter of the alphabet"
+```
+
+
+
