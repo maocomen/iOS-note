@@ -37,7 +37,7 @@ storeWeak(id *location, objc_object *newObj)//（weak 变量的地址，要指�
 
     SideTable::lockTwo<HaveOld, HaveNew>(oldTable, newTable);//上锁
 
-    if (HaveOld  &&  *location != oldObj) {//如果有旧值，且指针指向的对象不等于旧值？？？没搞明白为什么要有这个判断
+    if (HaveOld  &&  *location != oldObj) {//如果有旧值，且指针指向的对象不等于旧值 如果 oldObj 与 *location 不同的话，说明 location 可能被其他县城修改了
         SideTable::unlockTwo<HaveOld, HaveNew>(oldTable, newTable);//解锁，返回 retry 地方重新执行
         goto retry;
     }
@@ -48,10 +48,10 @@ storeWeak(id *location, objc_object *newObj)//（weak 变量的地址，要指�
     if (HaveNew  &&  newObj) {//如果需要赋新值
         Class cls = newObj->getIsa();//取出新值对应的类
         if (cls != previouslyInitializedClass  &&  
-            !((objc_class *)cls)->isInitialized()) //
+            !((objc_class *)cls)->isInitialized()) //判断 isa 是否非空而且已经初始化过
         {
-            SideTable::unlockTwo<HaveOld, HaveNew>(oldTable, newTable);
-            _class_initialize(_class_getNonMetaClass(cls, (id)newObj));
+            SideTable::unlockTwo<HaveOld, HaveNew>(oldTable, newTable);//解锁
+            _class_initialize(_class_getNonMetaClass(cls, (id)newObj));//执行初始化方法
 
             // If this class is finished with +initialize then we're good.
             // If this class is still running +initialize on this thread 
@@ -59,9 +59,13 @@ storeWeak(id *location, objc_object *newObj)//（weak 变量的地址，要指�
             // then we may proceed but it will appear initializing and 
             // not yet initialized to the check above.
             // Instead set previouslyInitializedClass to recognize it on retry.
+            // 如果该类已经执行完了 +initialize 方法，是最理想情况
+            // 如果该类 +initialize 在线程中
+            // 例如 +initialize 正在调用 storeweak 方法 ？？？
+            // 需要手动对其增加保护策略，并设置 previouslyInitializedClass 指针进行标记
             previouslyInitializedClass = cls;
 
-            goto retry;
+            goto retry;// 重新尝试
         }
     }
 
